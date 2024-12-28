@@ -37,5 +37,5 @@ for name in fav_number.keys(): #this code can also be written without keys()
         print("Hi " + name.title() + " I see your favorite number is: " + str(fav_number[name]))
 #we use the name of the dictionary and the current value of name as the key
 
-if 'tony' not in fav_number.keys():
-    print("\nTony, please tell us your favorite number")
+    if 'tony' not in fav_number.keys():
+        print("\nTony, please tell us your favorite number")
