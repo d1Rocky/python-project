@@ -2,7 +2,7 @@
 
 import pyshark
 
-capture = pyshark.FileCapture('your_capture_file.pcap')
+capture = pyshark.FileCapture('/Users/eden/Desktop/wireshark_packets/test_capture.pcapng')
 
 # Iterate over packets
 for packet in capture:
