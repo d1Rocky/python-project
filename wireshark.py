@@ -24,12 +24,14 @@ if user_input == 1:
         previous_packet_no = None
         
         for packet in capture:
-            if hasattr(packet, 'sniff_timestamp'):  # Ensure the packet has a timestamp
+            # Check if the packet has a 'sniff_timestamp' attribut
+            if hasattr(packet, 'sniff_timestamp'):
                 current_time = float(packet.sniff_timestamp)
                 if previous_time is not None:
                     latency = current_time - previous_time
                     if latency > latency_threshold:
                         print(f"Packet #{previous_packet_no} -> Packet #{packet.number}: {latency:.2f} seconds")
+                # Update the previous packet's details with the current packet's details
                 previous_time = current_time
                 previous_packet_no = packet.number
     except ValueError:
@@ -39,10 +41,11 @@ if user_input == 1:
 if user_input == 2:
 
     print("\nAnalyzing unsecured protocols...\n")
+    # Define a list of unsecured protocols
     unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
 
     for packet in capture:
-        # Checks if protocols are in packet
+        # Check if the highest layer of the packet matches any unsecured protocol
         if packet.highest_layer in unsecured_protocols:
             print("Packet Number:", packet.number)
             print("Source Port:", packet.tcp.srcport)
@@ -51,6 +54,28 @@ if user_input == 2:
             print("Source IP:", packet.ip.src)
             print("Destination Address:", packet.ip.dst + "\n")
 
+
+if user_input == 3:
+
+    while True:
+        try:
+            # Prompt the user to enter a size threshold
+            large_packet = int(input("\nEnter the packet size threshold in bytes(e.g., 1500 will be 1500 bytes): "))
+            print(f"\nAnalyzing large packets that are bigger or equal to {large_packet} bytes...\n")
+        
+            for packet in capture:
+                # Check if the packet object has the 'length' attribute
+                if hasattr(packet, 'length'):
+                    # Convert the packet length to an integer
+                    current_size = int(packet.length)
+                    # Compare the packet size with the user-defined threshold
+                    if current_size >= large_packet:
+                        print("\nPacket #" + packet.number)
+                        print("Packet size: " + str(current_size))
+            break
+        except ValueError:
+            print("\n\033[1mError! Please provide a whole number.\033[0m")
+        
 
 # Close the capture file
 capture.close()
