@@ -38,11 +38,17 @@ if user_input == 1:
 
 if user_input == 2:
 
-    
     print("\nAnalyzing unsecured protocols...\n")
+    unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
+
     for packet in capture:
-        print(dir(packet))
-        break
+        if packet.highest_layer in unsecured_protocols:
+            print("Packet Number:", packet.number)
+            print("Source Port:", packet.tcp.srcport)
+            print("Destination Port:", packet.tcp.dstport)
+            print("Protocol:", packet.ip.proto)
+            print("Source IP:", packet.ip.src)
+            print("Destination Address:", packet.ip.dst + "\n")
 
 
 # Close the capture file
