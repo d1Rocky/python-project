@@ -42,6 +42,7 @@ if user_input == 2:
     unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
 
     for packet in capture:
+        # Checks if protocols are in packet
         if packet.highest_layer in unsecured_protocols:
             print("Packet Number:", packet.number)
             print("Source Port:", packet.tcp.srcport)
