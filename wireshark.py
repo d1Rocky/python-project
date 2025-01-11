@@ -8,8 +8,8 @@ print(("\033[1;4mWireshark File Capture\033[0m"))
 print("\n1 = Latency Check")
 print("2 = Unsecured Protocols")
 print("3 = Large Packet Detector")
-print("4 = Failed Handshake Analyzer")
-print("5 = DNS Query Extractor")
+print("4 = DNS Query Extractor")
+print("5 = Failed Handshake Analyzer")
 print("6 = Top IP Talkers")
 
 user_input = int(input("\nEnter a number: "))
@@ -42,7 +42,7 @@ if user_input == 2:
 
     print("\nAnalyzing unsecured protocols...\n")
     # Define a list of unsecured protocols
-    unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
+    unsecured_protocols = ['TCP','HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
 
     for packet in capture:
         # Check if the highest layer of the packet matches any unsecured protocol
@@ -75,7 +75,30 @@ if user_input == 3:
             break
         except ValueError:
             print("\n\033[1mError! Please provide a whole number.\033[0m")
-        
+
+
+if user_input == 4:
+    print("\nAnalyzing packets with Domain Name Server...\n")
+    
+    def extract_domain_name(packet):
+        try:
+            # Check if the packet has a DNS layer and the 'qry_name' attribute
+            if hasattr(packet.dns, 'qry_name'):
+                # Extract and return the DNS query name
+                return packet.dns.qry_name
+        except AttributeError:
+            # Ignore packets without a DNS query name
+            pass
+
+    # Loop through packets to extract DNS query names
+    for packet in capture:
+        # Attempt to extract the domain name from the current packet
+        domain_name = extract_domain_name(packet)
+        # If a domain name was found, print it
+        if domain_name:
+            print(f"Domain Name: {domain_name} | Packet #{packet.number}")
+
+
 
 # Close the capture file
 capture.close()
