@@ -42,7 +42,7 @@ if user_input == 2:
 
     print("\nAnalyzing unsecured protocols...\n")
     # Define a list of unsecured protocols
-    unsecured_protocols = ['TCP','HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
+    unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
 
     for packet in capture:
         # Check if the highest layer of the packet matches any unsecured protocol
@@ -53,6 +53,9 @@ if user_input == 2:
             print("Protocol:", packet.ip.proto)
             print("Source IP:", packet.ip.src)
             print("Destination Address:", packet.ip.dst + "\n")
+    # Checks if packet highest layer is not finding matches to unsecured protocols within packet file
+    if packet.highest_layer is not unsecured_protocols:
+        print("\033[1mUnsecured protocol was not found!\033[0m")
 
 
 if user_input == 3:
@@ -97,6 +100,7 @@ if user_input == 4:
         # If a domain name was found, print it
         if domain_name:
             print(f"Domain Name: {domain_name} | Packet #{packet.number}")
+
 
 
 
