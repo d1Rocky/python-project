@@ -22,6 +22,7 @@ if user_input == 1:
         
         previous_time = None
         previous_packet_no = None
+        latency_found = False
         
         for packet in capture:
             # Check if the packet has a 'sniff_timestamp' attribut
@@ -30,10 +31,15 @@ if user_input == 1:
                 if previous_time is not None:
                     latency = current_time - previous_time
                     if latency > latency_threshold:
+                        latency_found = True
                         print(f"Packet #{previous_packet_no} -> Packet #{packet.number}: {latency:.2f} seconds")
                 # Update the previous packet's details with the current packet's details
                 previous_time = current_time
                 previous_packet_no = packet.number
+        if not latency_found:
+            print(f"No packets found with latency greater than {latency_threshold} seconds.")
+            print("Please enter a smaller threshold value.")
+        
     except ValueError:
         print("Invalid input! Please enter a valid numeric value for latency threshold.")
         
@@ -44,9 +50,12 @@ if user_input == 2:
     # Define a list of unsecured protocols
     unsecured_protocols = ['HTTP','TELNET','FTP','RSH','SNMP','POP3','IMAP']
 
+    unsecured_found = False
+
     for packet in capture:
         # Check if the highest layer of the packet matches any unsecured protocol
         if packet.highest_layer in unsecured_protocols:
+            unsecured_found = True
             print("Packet Number:", packet.number)
             print("Source Port:", packet.tcp.srcport)
             print("Destination Port:", packet.tcp.dstport)
@@ -54,9 +63,8 @@ if user_input == 2:
             print("Source IP:", packet.ip.src)
             print("Destination Address:", packet.ip.dst + "\n")
     # Checks if packet highest layer is not finding matches to unsecured protocols within packet file
-    if packet.highest_layer is not unsecured_protocols:
+    if not unsecured_found:
         print("\033[1mUnsecured protocol was not found!\033[0m")
-
 
 if user_input == 3:
 
