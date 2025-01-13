@@ -16,32 +16,36 @@ user_input = int(input("\nEnter a number: "))
 
 if user_input == 1:
     # Ask the user for their latency threshold
-    try:
-        latency_threshold = float(input("\nEnter the latency threshold in seconds (e.g., 5 for 5 seconds, 0.4 for 400ms): "))
-        print(f"\nAnalyzing packets with latency greater than {latency_threshold} seconds...\n")
+    while True:
+        try:
+            latency_threshold = float(input("\nEnter the latency threshold in seconds (e.g., 5 for 5 seconds, 0.4 for 400ms): "))
+            print(f"\nAnalyzing packets with latency greater than {latency_threshold} seconds...\n")
         
-        previous_time = None
-        previous_packet_no = None
-        latency_found = False
+            previous_time = None
+            previous_packet_no = None
+            latency_found = False
         
-        for packet in capture:
-            # Check if the packet has a 'sniff_timestamp' attribut
-            if hasattr(packet, 'sniff_timestamp'):
-                current_time = float(packet.sniff_timestamp)
-                if previous_time is not None:
-                    latency = current_time - previous_time
-                    if latency > latency_threshold:
-                        latency_found = True
-                        print(f"Packet #{previous_packet_no} -> Packet #{packet.number}: {latency:.2f} seconds")
-                # Update the previous packet's details with the current packet's details
-                previous_time = current_time
-                previous_packet_no = packet.number
-        if not latency_found:
-            print(f"No packets found with latency greater than {latency_threshold} seconds.")
-            print("Please enter a smaller threshold value.")
-        
-    except ValueError:
-        print("Invalid input! Please enter a valid numeric value for latency threshold.")
+            for packet in capture:
+                # Check if the packet has a 'sniff_timestamp' attribut
+                if hasattr(packet, 'sniff_timestamp'):
+                    current_time = float(packet.sniff_timestamp)
+                    if previous_time is not None:
+                        latency = current_time - previous_time
+                        if latency > latency_threshold:
+                            latency_found = True
+                            print(f"Packet #{previous_packet_no} -> Packet #{packet.number}: {latency:.2f} seconds")
+                    # Update the previous packet's details with the current packet's details
+                    previous_time = current_time
+                    previous_packet_no = packet.number
+
+            if not latency_found:
+                print(f"No packets found with latency greater than {latency_threshold} seconds.")
+                print("Please enter a smaller threshold value.")
+            else:
+                break
+
+        except ValueError:
+            print("Invalid input! Please enter a valid numeric value for latency threshold.")
         
 
 if user_input == 2:
