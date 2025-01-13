@@ -70,6 +70,7 @@ if user_input == 2:
     if not unsecured_found:
         print("\033[1mUnsecured protocol was not found!\033[0m")
 
+
 if user_input == 3:
 
     while True:
@@ -77,7 +78,8 @@ if user_input == 3:
             # Prompt the user to enter a size threshold
             large_packet = int(input("\nEnter the packet size threshold in bytes(e.g., 1500 will be 1500 bytes): "))
             print(f"\nAnalyzing large packets that are bigger or equal to {large_packet} bytes...\n")
-        
+            packet_found = False
+
             for packet in capture:
                 # Check if the packet object has the 'length' attribute
                 if hasattr(packet, 'length'):
@@ -85,9 +87,15 @@ if user_input == 3:
                     current_size = int(packet.length)
                     # Compare the packet size with the user-defined threshold
                     if current_size >= large_packet:
+                        packet_found = True
                         print("\nPacket #" + packet.number)
                         print("Packet size: " + str(current_size))
-            break
+
+            if not packet_found:
+                print(f"No packets found with size >= {large_packet} bytes. Please try a smaller number.")
+            else:
+                break
+            
         except ValueError:
             print("\n\033[1mError! Please provide a whole number.\033[0m")
 
