@@ -9,8 +9,7 @@ print("\n1 = Latency Check")
 print("2 = Unsecured Protocols")
 print("3 = Large Packet Detector")
 print("4 = DNS Query Extractor")
-print("5 = Failed Handshake Analyzer")
-print("6 = Top IP Talkers")
+print("5 = Top IP Talkers")
 
 user_input = int(input("\nEnter a number: "))
 
@@ -122,7 +121,29 @@ if user_input == 4:
             print(f"Domain Name: {domain_name} | Packet #{packet.number}")
 
 
+if user_input == 5:
 
+    print("\nAnalyzing for top IP talkers...\n")
+
+    pairs = {}  # Dictionary to count communication pairs
+
+    for packet in capture:
+        if hasattr(packet, 'ip'):
+            src = packet.ip.src
+            dst = packet.ip.dst
+            pair = (src, dst)
+
+            # Checks for count if both src and dst show in the same packet
+            if pair in pairs:
+                pairs[pair] += 1
+            else:
+                pairs[pair] = 1
+
+    # Find the pair with the maximum count
+    max_pair = max(pairs, key=pairs.get)
+    max_count = pairs[max_pair]
+
+    print(f"Source IP: {max_pair[0]} Destination IP: {max_pair[1]} - {max_count} times")
 
 # Close the capture file
 capture.close()
