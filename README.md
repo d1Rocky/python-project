@@ -1,8 +1,8 @@
 # python-project
 
-Network Analysis Tool
+PacketIQ
 
-this project is a Python-based tool designed to analyze network packets capture in Wireshark using .pcap or .pcaphg file. Using the pyshark library, the script provides five main features to help understand and analyze network activity. The tool is menu-driven, so you can choose what you want to do by entering a number. Below is a quick overview of the features and how to use them.
+This project is a Python-based tool designed to analyze network packets capture in Wireshark using .pcap or .pcaphg file. Using the pyshark library, the script provides five main features to help understand and analyze network activity. The tool is menu-driven, so you can choose what you want to do by entering a number. Below is a quick overview of the features and how to use them.
 
 
 1. Latency Check
